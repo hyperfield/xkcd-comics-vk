@@ -33,8 +33,8 @@ A Python utility that uses the API of [xkcd.com](xkcd.com) to download a random 
 
     VK_CLIENT_ID = 1234567
     VK_ACCESS_TOKEN = "533bacf01e1165b57531ad114461ae8736d6506a3"
-    VK_UID = "658704571"
-    VK_GID = "206559520"
+    VK_UID = "123456789"
+    VK_GID = "123456789"
     VK_API_VER = "5.131"
 
 > **Note:** If you deploy this script on a service which does not use a `.env` (or similar) file, but which would store these environment variables in its own environment (such as [Heroku](http://heroku.com)), you don't need to change anything in the code. The above environment variables will be picked up automatically from the current environment if no `.env` file is present.
