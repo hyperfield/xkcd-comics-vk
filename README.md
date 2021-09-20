@@ -1,6 +1,6 @@
 # xkcd.com random comics to VK posting utility
 
-A Python utility that uses the API of [xkcd.com](xkcd.com) to download a random image and caption from the same comics website, and the API of [vk.com](vk.com) to upload and publish the downloaded image to the same social network. The utility deletes the downloaded image locally.
+A Python utility that uses the API of [xkcd.com](http://xkcd.com) to download a random image and caption from the same comics website, and the API of [vk.com](http://vk.com) to upload and publish the downloaded image to the same social network. The utility deletes the downloaded image locally.
 
 ## Installation
 
@@ -17,7 +17,7 @@ A Python utility that uses the API of [xkcd.com](xkcd.com) to download a random 
 
 6. Now create a Python virtual environment:
 
-    python3 -m venv .venv
+        python3 -m venv .venv
 
     Activate the environment, e.g.:
 
@@ -31,15 +31,19 @@ A Python utility that uses the API of [xkcd.com](xkcd.com) to download a random 
 
 > Example of `.env`:
 
-    VK_CLIENT_ID = 1234567
-    VK_ACCESS_TOKEN = "533bacf01e1165b57531ad114461ae8736d6506a3"
-    VK_UID = "123456789"
-    VK_GID = "123456789"
-    VK_API_VER = "5.131"
+    VK_CLIENT_ID=1234567
+    VK_ACCESS_TOKEN="533bacf01e1165b57531ad114461ae8736d6506a3"
+    VK_UID="123456789"
+    VK_GID="123456789"
+    VK_API_VER="5.131"
 
 > **Note:** If you deploy this script on a service which does not use a `.env` (or similar) file, but which would store these environment variables in its own environment (such as [Heroku](http://heroku.com)), you don't need to change anything in the code. The above environment variables will be picked up automatically from the current environment if no `.env` file is present.
 
 ## Launching the program
+
+The standard way is to run in your command line interface
+
+    python3 main.py
 
 If you are in Linux and make the file executable by
 
