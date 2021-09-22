@@ -31,9 +31,7 @@ A Python utility that uses the API of [xkcd.com](http://xkcd.com) to download a 
 
 > Example of `.env`:
 
-    VK_CLIENT_ID=1234567
     VK_ACCESS_TOKEN="533bacf01e1165b57531ad114461ae8736d6506a3"
-    VK_UID="123456789"
     VK_GID="123456789"
     VK_API_VER="5.131"
 
