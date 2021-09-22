@@ -94,15 +94,14 @@ def post_photo_vk(vk_access_token, vk_group_id, vk_api_ver, img_file_name,
 
 
 def post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
-                  latest_comic_number=0, comic_response=None):
+                  latest_comic_number):
 
-    if comic_response is None:
-        random_comic_number = randint(0, latest_comic_number)
-        comic_response = requests.get(
-            f"https://xkcd.com/{random_comic_number}/info.0.json"
-            )
-        comic_response.raise_for_status()
-        comic_response = comic_response.json()
+    random_comic_number = randint(0, latest_comic_number)
+    comic_response = requests.get(
+        f"https://xkcd.com/{random_comic_number}/info.0.json"
+        )
+    comic_response.raise_for_status()
+    comic_response = comic_response.json()
     comic_img_url = comic_response["img"]
     comic_comment = comic_response["alt"]
     relative_img_path = urlsplit(comic_img_url).path
