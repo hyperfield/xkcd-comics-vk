@@ -7,6 +7,7 @@ from pathlib import Path
 from random import randint
 import requests
 import urllib3
+from urllib.parse import urlsplit, unquote
 
 
 def fetch_image(img_url, file_name, folder='.'):
@@ -104,7 +105,8 @@ def post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
         comic_response = comic_response.json()
     comic_img_url = comic_response["img"]
     comic_comment = comic_response["alt"]
-    img_file_name = comic_img_url.split("/")[-1]
+    relative_img_path = urlsplit(comic_img_url).path
+    img_file_name = unquote(relative_img_path.split('/')[-1])
     fetch_image(comic_img_url, img_file_name)
     vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
                                 img_file_name, comic_comment)
