@@ -2,18 +2,16 @@
 
 from dotenv import load_dotenv
 from os import getenv, remove
-import json
 import logging
 from pathlib import Path
-from os import path
 from random import randint
 import requests
 import urllib3
 
 
 def fetch_image(img_url, file_name, folder='.'):
-    file_path = path.join(folder, file_name)
-    if Path(file_path).is_file():
+    file_path = Path(folder, file_name)
+    if file_path.is_file():
         logging.info(
             f"fetch_image(): {file_path} already exists, not fetching it"
         )
@@ -103,7 +101,7 @@ def post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
             f"https://xkcd.com/{random_comic_number}/info.0.json"
             )
         comic_response.raise_for_status()
-        comic_response = json.loads(comic_response.text)
+        comic_response = comic_response.json()
     comic_img_url = comic_response["img"]
     comic_comment = comic_response["alt"]
     img_file_name = comic_img_url.split("/")[-1]
@@ -122,8 +120,7 @@ def main():
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     comic_response = requests.get("https://xkcd.com/info.0.json")
     comic_response.raise_for_status()
-    comic_response = json.loads(comic_response.text)
-    latest_comic_number = comic_response["num"]
+    latest_comic_number = comic_response.json()["num"]
 
     # Post a random comic
     post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
