@@ -10,6 +10,19 @@ import urllib3
 from urllib.parse import urlsplit, unquote
 
 
+class VKError(Exception):
+    def __init__(self, vk_error_message):
+        self.vk_error_message = vk_error_message
+
+    def __str__(self):
+        return repr(self.vk_error_message)
+
+
+def check_for_vk_error(vk_response):
+    if "error" in vk_response:
+        raise VKError(vk_response["error"]["error_msg"])
+
+
 def fetch_image(img_url, file_name, folder='.'):
     file_path = Path(folder, file_name)
     if file_path.is_file():
@@ -28,11 +41,14 @@ def fetch_image(img_url, file_name, folder='.'):
 def get_photo_publish_address(vk_access_token, vk_group_id, vk_api_ver):
     photo_upload_api_url = "https://api.vk.com/method/photos.getWallUploadServer"
     photo_upload_params = {"access_token": vk_access_token,
-                           "group_id": vk_group_id, "v": vk_api_ver}
+                           "group_id": vk_group_id,
+                           "v": vk_api_ver}
     photo_upload_url_response = requests.get(photo_upload_api_url,
                                              params=photo_upload_params)
     photo_upload_url_response.raise_for_status()
-    return photo_upload_url_response.json()['response']['upload_url']
+    photo_upload_url_response = photo_upload_url_response.json()
+    check_for_vk_error(photo_upload_url_response)
+    return photo_upload_url_response['response']['upload_url']
 
 
 def upload_photo_vk(file_path, photo_upload_addr):
@@ -40,36 +56,47 @@ def upload_photo_vk(file_path, photo_upload_addr):
         files = {
             'file1': file,
         }
-        response = requests.post(photo_upload_addr, files=files)
-        response.raise_for_status()
-        return response.json()
+        vk_response = requests.post(photo_upload_addr, files=files)
+        vk_response.raise_for_status()
+        vk_response = vk_response.json()
+        check_for_vk_error(vk_response)
+        return vk_response
 
 
 def save_photo_vk(vk_access_token, vk_group_id, vk_api_ver, vk_photo_param,
                   vk_server_param, vk_hash, photo_caption):
     photo_save_api_url = "https://api.vk.com/method/photos.saveWallPhoto"
     photo_save_params = {"access_token": vk_access_token,
-                         "v": vk_api_ver, "group_id": vk_group_id,
-                         "photo": vk_photo_param, "server": vk_server_param,
-                         "hash": vk_hash, "caption": photo_caption}
+                         "v": vk_api_ver,
+                         "group_id": vk_group_id,
+                         "photo": vk_photo_param,
+                         "server": vk_server_param,
+                         "hash": vk_hash,
+                         "caption": photo_caption}
     photo_save_response = requests.post(photo_save_api_url,
                                         params=photo_save_params)
     photo_save_response.raise_for_status()
-    return photo_save_response.json()
+    photo_save_response = photo_save_response.json()
+    check_for_vk_error(photo_save_response)
+    return photo_save_response
 
 
 def publish_photo_vk(vk_access_token, vk_api_ver, owner_id, from_group,
                      message, photo_owner_id, photo_media_id):
     photo_publish_api_url = "https://api.vk.com/method/wall.post"
     photo_publish_params = {"access_token": vk_access_token,
-                            "v": vk_api_ver, "owner_id": -int(owner_id),
-                            "message": message, "from_group": from_group,
+                            "v": vk_api_ver,
+                            "owner_id": -int(owner_id),
+                            "message": message,
+                            "from_group": from_group,
                             "attachments":
                                 [f"photo{photo_owner_id}_{photo_media_id}"]}
     photo_publish_reponse = requests.post(photo_publish_api_url,
                                           params=photo_publish_params)
     photo_publish_reponse.raise_for_status()
-    return photo_publish_reponse.json()
+    photo_publish_reponse = photo_publish_reponse.json()
+    check_for_vk_error(photo_publish_reponse)
+    return photo_publish_reponse
 
 
 def post_photo_vk(vk_access_token, vk_group_id, vk_api_ver, img_file_name,
