@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-from dotenv import load_dotenv
-from os import getenv, remove
 import logging
+from os import getenv, remove
 from pathlib import Path
 from random import randint
 import requests
 import urllib3
 from urllib.parse import urlsplit, unquote
+
+from dotenv import load_dotenv
 
 
 class VKError(Exception):
@@ -23,7 +24,7 @@ def check_for_vk_error(vk_response):
         raise VKError(vk_response["error"]["error_msg"])
 
 
-def fetch_image(img_url, file_name, folder='.'):
+def fetch_image(img_url, file_name, folder="."):
     file_path = Path(folder, file_name)
     if file_path.is_file():
         logging.info(
@@ -33,7 +34,7 @@ def fetch_image(img_url, file_name, folder='.'):
 
     img_response = requests.get(img_url, verify=False)
     img_response.raise_for_status()
-    with open(file_path, 'wb') as file:
+    with open(file_path, "wb") as file:
         file.write(img_response.content)
     return file_path
 
@@ -48,13 +49,13 @@ def get_photo_publish_address(vk_access_token, vk_group_id, vk_api_ver):
     photo_upload_url_response.raise_for_status()
     photo_upload_url_response = photo_upload_url_response.json()
     check_for_vk_error(photo_upload_url_response)
-    return photo_upload_url_response['response']['upload_url']
+    return photo_upload_url_response["response"]["upload_url"]
 
 
 def upload_photo_vk(file_path, photo_upload_addr):
-    with open(file_path, 'rb') as file:
+    with open(file_path, "rb") as file:
         files = {
-            'file1': file,
+            "file1": file,
         }
         vk_response = requests.post(photo_upload_addr, files=files)
     vk_response.raise_for_status()
@@ -132,7 +133,7 @@ def post_random_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
     comic_img_url = comic_response["img"]
     comic_comment = comic_response["alt"]
     relative_img_path = urlsplit(comic_img_url).path
-    img_file_name = unquote(relative_img_path.split('/')[-1])
+    img_file_name = unquote(relative_img_path.split("/")[-1])
     try:
         fetch_image(comic_img_url, img_file_name)
         vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
@@ -156,5 +157,5 @@ def main():
                          latest_comic_number)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
