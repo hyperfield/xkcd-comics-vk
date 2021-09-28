@@ -57,10 +57,10 @@ def upload_photo_vk(file_path, photo_upload_addr):
             'file1': file,
         }
         vk_response = requests.post(photo_upload_addr, files=files)
-        vk_response.raise_for_status()
-        vk_response = vk_response.json()
-        check_for_vk_error(vk_response)
-        return vk_response
+    vk_response.raise_for_status()
+    vk_response = vk_response.json()
+    check_for_vk_error(vk_response)
+    return vk_response
 
 
 def save_photo_vk(vk_access_token, vk_group_id, vk_api_ver, vk_photo_param,
