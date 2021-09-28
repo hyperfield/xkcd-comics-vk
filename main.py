@@ -120,8 +120,8 @@ def post_photo_vk(vk_access_token, vk_group_id, vk_api_ver, img_file_name,
     return vk_publish_photo
 
 
-def post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
-                  latest_comic_number):
+def post_random_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
+                         latest_comic_number):
 
     random_comic_number = randint(0, latest_comic_number)
     comic_response = requests.get(
@@ -152,9 +152,8 @@ def main():
     comic_response.raise_for_status()
     latest_comic_number = comic_response.json()["num"]
 
-    # Post a random comic
-    post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
-                  latest_comic_number)
+    post_random_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
+                         latest_comic_number)
 
 
 if __name__ == '__main__':
