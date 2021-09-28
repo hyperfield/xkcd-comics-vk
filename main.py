@@ -133,10 +133,12 @@ def post_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
     comic_comment = comic_response["alt"]
     relative_img_path = urlsplit(comic_img_url).path
     img_file_name = unquote(relative_img_path.split('/')[-1])
-    fetch_image(comic_img_url, img_file_name)
-    vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
-                                img_file_name, comic_comment)
-    remove(img_file_name)
+    try:
+        fetch_image(comic_img_url, img_file_name)
+        vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
+                                    img_file_name, comic_comment)
+    finally:
+        remove(img_file_name)
     return vk_response
 
 
