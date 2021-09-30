@@ -135,10 +135,11 @@ def post_random_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
     relative_img_path = urlsplit(comic_img_url).path
     decoded_file_name = unquote(relative_img_path)
     img_file_name = path.split(decoded_file_name)[-1]
+    fetch_image(comic_img_url, img_file_name)
     try:
-        fetch_image(comic_img_url, img_file_name)
         vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
                                     img_file_name, comic_comment)
+        vk_response.raise_for_status()
     finally:
         remove(img_file_name)
     return vk_response
