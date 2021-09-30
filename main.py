@@ -4,11 +4,11 @@ import logging
 from os import getenv, remove, path
 from pathlib import Path
 from random import randint
+
+from dotenv import load_dotenv
 import requests
 import urllib3
 from urllib.parse import urlsplit, unquote
-
-from dotenv import load_dotenv
 
 
 class VKError(Exception):
