@@ -6,6 +6,7 @@ from pathlib import Path
 from random import randint
 import requests
 import urllib3
+from urllib.parse import urlsplit, unquote
 
 from dotenv import load_dotenv
 
@@ -131,7 +132,9 @@ def post_random_comic_vk(vk_access_token, vk_group_id, vk_api_ver,
     comic_response = comic_response.json()
     comic_img_url = comic_response["img"]
     comic_comment = comic_response["alt"]
-    img_file_name = path.split(comic_img_url)[-1]
+    relative_img_path = urlsplit(comic_img_url).path
+    decoded_file_name = unquote(relative_img_path)
+    img_file_name = path.split(decoded_file_name)[-1]
     try:
         fetch_image(comic_img_url, img_file_name)
         vk_response = post_photo_vk(vk_access_token, vk_group_id, vk_api_ver,
